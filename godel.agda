@@ -34,7 +34,7 @@ data PrimSign : Set where
 SignComb : Set
 SignComb = List PrimSign
 
-infix 40 𝑓_
+infix 90 𝑓_
 data Sign : ℕ → Set where
   ⟨_⟩ : (v : Variable) → Sign (level v)
   0̇ : Sign 0
@@ -45,10 +45,10 @@ sign→comb ⟨ i ⟩ = ⟨ i ⟩̂ ∷ []
 sign→comb 0̇ = 0̂ ∷ []
 sign→comb (𝑓 s) = 𝑓̂ ∷ sign→comb s
 
-infix 35 _⦅_⦆
-infix 25 ~_
-infix 33 ⟨_⟩Π_
-infix 24 _∨_
+infix 80 _⦅_⦆
+infix 50 ~_
+infix 40 _∨_
+infix 70 ⟨_⟩Π_
 data Formula : Set where
   _⦅_⦆ : ∀{n} → Sign (1 + n) → Sign n → Formula
   ~_ : Formula → Formula
@@ -76,11 +76,11 @@ form→comb (~ a) = ~̂ ∷ ⦅̂ ∷ form→comb a ++ ⦆̂ ∷ []
 form→comb (a ∨ b) = ⦅̂ ∷ form→comb a ++ ⦆̂ ∷ ∨̂ ∷ ⦅̂ ∷ form→comb b ++ ⦆̂ ∷ []
 form→comb (⟨ x ⟩Π a) = ⟨ x ⟩̂ ∷ Π̂ ∷ ⦅̂ ∷ form→comb a ++ ⦆̂ ∷ []
 
-infix 32 _∙_
+infix 60 _∙_
 _∙_ : Formula → Formula → Formula
-p ∙ q = ~ p ∨ ~ q
+p ∙ q = ~ (~ p ∨ ~ q)
 
-infixr 23 _⊃_
+infixr 30 _⊃_
 _⊃_ : Formula → Formula → Formula
 p ⊃ q = (~ p) ∨ q
 
@@ -90,7 +90,7 @@ x = 0
 y : ℕ
 y = 1
 
-infix 35 _＝_
+infix 80 _＝_
 _＝_ : ∀{n} → Sign n → Sign n → Formula
 _＝_ {n} s₁ s₂ = ⟨ x , 1 + n ⟩Π (⟨ x , 1 + n ⟩ ⦅ s₁ ⦆ ⊃ ⟨ x , 1 + n ⟩ ⦅ s₂ ⦆)
 
