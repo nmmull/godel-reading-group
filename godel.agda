@@ -55,6 +55,12 @@ data Formula : Set where
   _∨_ : Formula → Formula → Formula
   ⟨_⟩Π_ : Variable → Formula → Formula
 
+form→comb : Formula → SignComb
+form→comb (a ⦅ b ⦆) = sign→comb a ++ ⦅̂ ∷ sign→comb b ++ ⦆̂ ∷ []
+form→comb (~ a) = ~̂ ∷ ⦅̂ ∷ form→comb a ++ ⦆̂ ∷ []
+form→comb (a ∨ b) = ⦅̂ ∷ form→comb a ++ ⦆̂ ∷ ∨̂ ∷ ⦅̂ ∷ form→comb b ++ ⦆̂ ∷ []
+form→comb (⟨ x ⟩Π a) = ⟨ x ⟩̂ ∷ Π̂ ∷ ⦅̂ ∷ form→comb a ++ ⦆̂ ∷ []
+
 subst-sign : ∀{n} → Sign n → (v : Variable) → Sign (level v) → Sign n
 subst-sign ⟨ x ⟩ v b with x ≟ v
 ...                    | yes refl = b
@@ -70,19 +76,13 @@ subst (⟨ x ⟩Π a) v b with x ≟ v
 ...                    | yes _ = ⟨ x ⟩Π (subst a v b)
 ...                    | _     = ⟨ x ⟩Π a
 
-form→comb : Formula → SignComb
-form→comb (a ⦅ b ⦆) = sign→comb a ++ ⦅̂ ∷ sign→comb b ++ ⦆̂ ∷ []
-form→comb (~ a) = ~̂ ∷ ⦅̂ ∷ form→comb a ++ ⦆̂ ∷ []
-form→comb (a ∨ b) = ⦅̂ ∷ form→comb a ++ ⦆̂ ∷ ∨̂ ∷ ⦅̂ ∷ form→comb b ++ ⦆̂ ∷ []
-form→comb (⟨ x ⟩Π a) = ⟨ x ⟩̂ ∷ Π̂ ∷ ⦅̂ ∷ form→comb a ++ ⦆̂ ∷ []
-
 infix 60 _∙_
 _∙_ : Formula → Formula → Formula
 p ∙ q = ~ (~ p ∨ ~ q)
 
 infixr 30 _⊃_
 _⊃_ : Formula → Formula → Formula
-p ⊃ q = (~ p) ∨ q
+p ⊃ q = ~ p ∨ q
 
 x : ℕ
 x = 0
